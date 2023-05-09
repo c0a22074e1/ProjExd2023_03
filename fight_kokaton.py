@@ -130,7 +130,7 @@ class Bomb:
         pg.draw.circle(self._img, color, (rad, rad), rad)
         self._img.set_colorkey((0, 0, 0))
         self._rct = self._img.get_rect()
-        self._rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
+        self._rct.center = random.randint(50, WIDTH - 50), random.randint(50, HEIGHT - 50)  # コード修正
         self._vx, self._vy = random.choice(Bomb._dires), random.choice(Bomb._dires)
 
     def update(self, screen: pg.Surface):
