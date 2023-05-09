@@ -12,6 +12,7 @@ NUM_OF_BOMBS = 5
 idx = 0  # オリジナル課題
 BLACK = (0, 0, 0)  # オリジナル課題
 beams = []
+score = 0
 
 
 def draw_text(scrn, txt, x, y, siz, col): # オリジナル課題
@@ -164,7 +165,7 @@ class Beam:  # 練習問題1
 
 
 def main():
-    global idx, beams
+    global idx, beams, score
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
@@ -207,6 +208,7 @@ def main():
                     pg.display.update()
                     time.sleep(1)
                     return
+        draw_text(screen, "SCORE "+str(score), 200, 30, 50, BLACK)
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
@@ -216,6 +218,7 @@ def main():
                 beam.update(screen)
                 for i, bomb in enumerate(bombs):
                     if beam._rct.colliderect(bomb._rct):
+                        score += 1
                         beams.remove(beam)
                         beam = None
                         del bombs[i]
