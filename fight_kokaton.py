@@ -11,6 +11,7 @@ NUM_OF_BOMBS = 5
 
 idx = 0  # オリジナル課題
 BLACK = (0, 0, 0)  # オリジナル課題
+beams = []
 
 
 def draw_text(scrn, txt, x, y, siz, col): # オリジナル課題
@@ -158,12 +159,12 @@ class Beam:  # 練習問題1
 
 
     def update(self, screen:pg.Surface):
-        self._rct.move_ip(self._vx, self._vy)
-        screen.blit(self.beam, self._rct)
+            self._rct.move_ip(self._vx, self._vy)
+            screen.blit(self.beam, self._rct)
 
 
 def main():
-    global idx
+    global idx, beams
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
@@ -174,6 +175,7 @@ def main():
     beam = None  # 練習問題1
 
     tmr = 0
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -181,7 +183,7 @@ def main():
             if event.type == pg.KEYDOWN:  # 練習問題1
                 if event.key == pg.K_SPACE:
                     beam = Beam(bird)
-                    # beams.append(beam)
+                    beams.append(beam)
 
         tmr += 1
         screen.blit(bg_img, [0, 0])
@@ -209,14 +211,16 @@ def main():
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
 
-        if beam is not None:  # 練習問題1
-            beam.update(screen)
-            for i, bomb in enumerate(bombs):
-                if beam._rct.colliderect(bomb._rct):
-                    beam = None
-                    del bombs[i]
-                    bird.change_img(6, screen)
-                    break
+        for beam in beams:
+            if beam is not None:  # 練習問題1
+                beam.update(screen)
+                for i, bomb in enumerate(bombs):
+                    if beam._rct.colliderect(bomb._rct):
+                        beams.remove(beam)
+                        beam = None
+                        del bombs[i]
+                        bird.change_img(6, screen)
+                        break
 
         pg.display.update()
         clock.tick(1000)
