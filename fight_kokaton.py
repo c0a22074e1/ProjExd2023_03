@@ -9,6 +9,17 @@ WIDTH = 1600  # ゲームウィンドウの幅
 HEIGHT = 900  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5
 
+idx = 0  # オリジナル課題
+BLACK = (0, 0, 0)  # オリジナル課題
+
+
+def draw_text(scrn, txt, x, y, siz, col): # オリジナル課題
+    fnt = pg.font.Font(None, siz)
+    sur = fnt.render(txt, True, col)
+    x = x - sur.get_width()/2
+    y = y - sur.get_height()/2
+    scrn.blit(sur, [x, y])
+
 
 def check_bound(area: pg.Rect, obj: pg.Rect) -> tuple[bool, bool]:
     """
@@ -152,6 +163,7 @@ class Beam:  # 練習問題1
 
 
 def main():
+    global idx
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
@@ -174,15 +186,25 @@ def main():
         tmr += 1
         screen.blit(bg_img, [0, 0])
 
-        for bomb in bombs:
-            bomb.update(screen)
+        key = pg.key.get_pressed()  # オリジナル課題
+
+        if idx == 0:  # オリジナル課題
+            draw_text(screen, "SPACE INVADERS", 900, 300, 50, BLACK)
+            draw_text(screen, "Press [1] to start!", 900, 600, 50, BLACK)
+        if key[pg.K_1] == 1:
+            pg.display.update()
+            idx = 1
+
+        if idx == 1:
+            for bomb in bombs:
+                bomb.update(screen)
         
-            if bird._rct.colliderect(bomb._rct):
+                if bird._rct.colliderect(bomb._rct):
             # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-                bird.change_img(8, screen)
-                pg.display.update()
-                time.sleep(1)
-                return
+                    bird.change_img(8, screen)
+                    pg.display.update()
+                    time.sleep(1)
+                    return
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
