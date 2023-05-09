@@ -49,6 +49,25 @@ class Bird:
             True, 
             False
         )
+        img0 = pg.transform.rotozoom(pg.image.load(f"ex03/fig/{num}.png"), 0, 2.0)
+        img1 = pg.transform.flip(pg.transform.rotozoom(pg.image.load(f"ex03/fig/{num}.png"), 0, 2.0), True, False)
+        img2 = pg.transform.flip(pg.transform.rotozoom(img0, -45, 1.0), True, False)
+        img3 = pg.transform.flip(pg.transform.rotozoom(img1, 90, 1.0), True, False)
+        img4 = pg.transform.flip(pg.transform.rotozoom(img1, 45, 1.0), True, False)
+        img5 = pg.transform.flip(pg.transform.rotozoom(img1, -45, 1.0), True, False)
+        img6 = pg.transform.flip(pg.transform.rotozoom(img1, -90, 1.0), True, False)
+        img7 = pg.transform.flip(pg.transform.rotozoom(img0, 45, 1.0), True, False)
+        self._images = {
+            (+1, 0):img1,
+            (+1, -1):img2,
+            (0, -1):img3,
+            (-1, -1):img4,
+            (-1, 0):img0,
+            (-1, +1):img5,
+            (0, +1):img6,
+            (+1, +1):img7
+        }
+
         self._rct = self._img.get_rect()
         self._rct.center = xy
 
@@ -67,13 +86,20 @@ class Bird:
         引数1 key_lst：押下キーの真理値リスト
         引数2 screen：画面Surface
         """
+
+        sum_mv = [0, 0]
+
         for k, mv in __class__._delta.items():
             if key_lst[k]:
                 self._rct.move_ip(mv)
+                sum_mv[0] += mv[0]
+                sum_mv[1] += mv[1]
         if check_bound(screen.get_rect(), self._rct) != (True, True):
             for k, mv in __class__._delta.items():
                 if key_lst[k]:
                     self._rct.move_ip(-mv[0], -mv[1])
+        if not(sum_mv[0] == 0 and sum_mv[1] == 0):
+            self._img = self._images[tuple(sum_mv)]
         screen.blit(self._img, self._rct)
 
 
